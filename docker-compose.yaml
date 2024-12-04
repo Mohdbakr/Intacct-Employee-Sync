@@ -2,7 +2,7 @@ services:
   
   app:
     build: ./backend
-    container_name: rag_api_container
+    container_name: emp_sync_app
     ports:
       - "8000:80"
     command: uvicorn app.main:app --host 0.0.0.0 --port 80 --reload
@@ -19,6 +19,25 @@ services:
             - .venv/
         - action: rebuild
           path: ./pyproject.toml/
+
+  postgres:
+    image: postgres:14.5
+    container_name: emp_sync_postgres
+    restart: always
+    # env_file:
+    #   - ./backend/.env 
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: p@ssworD
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/postgres_data
+
+volumes:
+  postgres_data:
+
 
 networks:
   default:
