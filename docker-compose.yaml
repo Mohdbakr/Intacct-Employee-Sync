@@ -1,13 +1,13 @@
 services:
   
-  app:
+  backend:
     build: ./backend
-    container_name: emp_sync_app
+    container_name: emp-sync-BE
     ports:
       - "8000:80"
     command: uvicorn app.main:app --host 0.0.0.0 --port 80 --reload
-    # depends_on:
-    #   - "standalone"
+    depends_on:
+      - postgres
 
 # for this to work use his command docker compose up --watch 
     develop:
@@ -34,6 +34,20 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/postgres_data
+
+  frontend:
+    build: ./frontend
+    container_name: emp-sync-FE
+    ports:
+      - "8080:8080"
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Required for file change detection inside Docker
+    volumes:
+      - ./frontend:/app # Mounts the source directory
+      - /app/node_modules # Ensures node_modules are container-specific
+    depends_on:
+      - backend
+    command: ["npm", "run", "dev"] # Use dev server in development
 
 volumes:
   postgres_data:
