@@ -1,36 +1,11 @@
 import { useForm } from 'react-hook-form';
-import styled from '@emotion/styled';
-import { motion } from 'framer-motion';
 import { FaGoogle, FaLinkedin } from 'react-icons/fa';
-import { FormInput } from './form/FormInput';
-import { FormCheckbox } from './form/FormCheckbox';
-import { GradientButton, SocialButton } from './form/FormButton';
-import { LoginFormData } from './form/types';
+import { FormInput } from '../Input/FormInput';
+import { FormCheckbox } from '../Checkbox/FormCheckbox';
+import { PrimaryButton, SocialLoginButton } from '../Buttons/FormButton';
+import { LoginFormData } from './types';
+import { Form, ForgotPassword, Divider } from './Form.styles'
 
-const Form = styled(motion.form)`
-  width: 100%;
-  max-width: 400px;
-  text-align: left;
-`;
-
-const ForgotPassword = styled(motion.a)`
-  color: ${props => props.theme.colors.gradientEnd};
-  text-decoration: none;
-  font-size: 0.9rem;
-  display: block;
-  text-align: right;
-  margin-top: 1rem;
-  
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const Divider = styled(motion.p)`
-  color: ${props => props.theme.colors.text.secondary};
-  margin: 1rem 0;
-  text-align: center;
-`;
 
 const formVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -88,9 +63,9 @@ export const LoginForm = () => {
         variants={itemVariants}
       />
 
-      <GradientButton type="submit" variants={itemVariants}>
+      <PrimaryButton type="submit" variants={itemVariants}>
         Login
-      </GradientButton>
+      </PrimaryButton>
       
       <ForgotPassword href="#" variants={itemVariants}>
         Forgot Password?
@@ -100,12 +75,20 @@ export const LoginForm = () => {
         <Divider variants={itemVariants}>
           Or continue with
         </Divider>
-        <SocialButton type="button" variants={itemVariants}>
-          <FaGoogle /> Continue with Google
-        </SocialButton>
-        <SocialButton type="button" variants={itemVariants}>
-          <FaLinkedin /> Continue with LinkedIn
-        </SocialButton>
+        <SocialLoginButton 
+          type="button" 
+          variants={itemVariants} 
+          icon={FaGoogle}
+        >
+          Continue with Google
+        </SocialLoginButton>
+        <SocialLoginButton 
+          type="button" 
+          variants={itemVariants} 
+          icon={FaLinkedin}
+        >
+          Continue with LinkedIn
+        </SocialLoginButton>
       </div>
     </Form>
   );

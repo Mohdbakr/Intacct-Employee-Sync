@@ -1,19 +1,6 @@
-import styled from '@emotion/styled';
-import { motion } from 'framer-motion';
 import { UseFormRegister } from 'react-hook-form';
-import { LoginFormData } from './types';
-
-const CheckboxGroup = styled(motion.div)`
-  margin-bottom: 1.5rem;
-`;
-
-const CheckboxLabel = styled.label`
-  color: ${props => props.theme.colors.text.secondary};
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-`;
+import { LoginFormData } from '../form/types';
+import { CheckboxGroup, CheckboxLabel } from './checkbox.styles';
 
 interface FormCheckboxProps {
   label: string;

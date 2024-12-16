@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@emotion/react';
 import { theme } from './styles/theme';
-import { LoginPage } from './pages/LoginPage';
+import { LoginPage } from './pages/Login/LoginPage';
 import './App.css';
 
 function App() {

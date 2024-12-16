@@ -1,9 +1,20 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 
-export const GradientButton = styled(motion.button)`
+export const BaseButton = styled(motion.button)`
   width: 100%;
   padding: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all ${({ theme }) => theme.transitions.default};
+  
+  &:hover {
+    transform: translateY(-4px);
+  }
+`;
+
+export const GradientButton = styled(BaseButton)`
   background: linear-gradient(
     135deg,
     ${({ theme }) => theme.colors.gradientStart},
@@ -11,33 +22,25 @@ export const GradientButton = styled(motion.button)`
   );
   color: ${({ theme }) => theme.colors.white};
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform ${({ theme }) => theme.transitions.default};
   
   &:hover {
-    transform: translateY(-2px);
+    box-shadow: ${({ theme }) => theme.shadows.glow};
   }
 `;
 
-export const SocialButton = styled(motion.button)`
-  width: 100%;
-  padding: 1rem;
+export const SocialButton = styled(BaseButton)`
   background: rgba(255, 255, 255, 0.05);
   color: ${({ theme }) => theme.colors.text.primary};
   border: 1px solid ${({ theme }) => theme.colors.inputBorder};
-  border-radius: 8px;
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  cursor: pointer;
-  transition: all ${({ theme }) => theme.transitions.default};
   
   &:hover {
     background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
+    border-color: ${({ theme }) => theme.colors.inputFocus};
+    box-shadow: ${({ theme }) => theme.shadows.glow};
   }
 `;
