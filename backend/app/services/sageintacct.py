@@ -4,11 +4,11 @@ from sageintacctsdk.exceptions import SageIntacctSDKError
 from app.core.config import settings
 
 connection = SageIntacctSDK(
-    sender_id=settings.sageintacct_sender_id,
-    sender_password=settings.sageintacct_sender_password,
-    user_id=settings.sageintacct_user_id,
-    user_password=settings.sageintacct_user_password,
-    company_id=settings.sageintacct_company_id,
+    sender_id=settings.SAGEINTACCT_SENDER_ID,
+    sender_password=settings.SAGEINTACCT_SENDER_PASSWORD,
+    user_id=settings.SAGEINTACCT_USER_ID,
+    user_password=settings.SAGEINTACCT_USER_PASSWORD,
+    company_id=settings.SAGEINTACCT_COMPANY_ID,
     # entity_id=settings.sageintacct_entity_id,  # Optional
 )
 
@@ -16,11 +16,11 @@ connection = SageIntacctSDK(
 class SageIntacctService:
     def __init__(self):
         self.client = SageIntacctSDK(
-            sender_id=settings.sageintacct_sender_id,
-            sender_password=settings.sageintacct_sender_password,
-            user_id=settings.sageintacct_user_id,
-            user_password=settings.sageintacct_user_password,
-            company_id=settings.sageintacct_company_id,
+            sender_id=settings.SAGEINTACCT_SENDER_ID,
+            sender_password=settings.SAGEINTACCT_SENDER_PASSWORD,
+            user_id=settings.SAGEINTACCT_USER_ID,
+            user_password=settings.SAGEINTACCT_USER_PASSWORD,
+            company_id=settings.SAGEINTACCT_COMPANY_ID,
             # entity_id=settings.sageintacct_entity_id,  # Optional
         )
 
