@@ -4,15 +4,20 @@ from fastapi import Depends
 from sqlmodel import Session
 from sqlalchemy.future import select as async_select
 from pydantic import EmailStr
+from passlib.context import CryptContext
 
 from app.models.users import User, UserCreate
 
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
 class UserService:
     async def create_user(self, user: UserCreate, db: Session) -> User:
+        hashed_password = pwd_context.hash(user.password)
         db_user = User(
             email=user.email,
-            hashed_password=user.hashed_password,
+            hashed_password=hashed_password,
             is_active=user.is_active,
             is_superuser=user.is_superuser,
         )
