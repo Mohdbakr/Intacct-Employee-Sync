@@ -1,12 +1,15 @@
 from datetime import datetime, timedelta
 
-from sqlmodel import select, Session
+from fastapi import Depends
+from sqlmodel import Session
 from passlib.context import CryptContext
 from jose import jwt
 
 
 from app.models.users import User
 from app.core.config import settings
+from app.services.user_services import user_service_dependency
+from app.db.session import get_db
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -21,8 +24,11 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def authenticate_user(email: str, password: str, db: Session):
-    user = db.exec(select(User).where(User.email == email)).first()
+async def authenticate_user(
+    email: str, password: str, user_service: user_service_dependency, db: Session = Depends(get_db)
+) -> User:
+    # user = db.exec(select(User).where(User.email == email)).first()
+    user = await user_service.get_user_by_email(email=email, db=db)
     if not user:
         return False
     return user

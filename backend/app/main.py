@@ -12,7 +12,7 @@ from app.api.routes import auth
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # perform startup tasks
-    session.init_db()
+    await session.init_db()
     yield
 
     # perform cleanup tasks
