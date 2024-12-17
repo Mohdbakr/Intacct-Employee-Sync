@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from passlib.context import CryptContext
 
 from app.db import session
 from app.api.routes import users
@@ -24,7 +23,7 @@ app.include_router(employees.router, prefix="/employees", tags=["Employee"])
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 
 origins = [
-    "http://frontend:8080",
+    "http://localhost:8080",
     "https://yourfrontenddomain.com",
 ]
 
@@ -35,13 +34,6 @@ app.add_middleware(
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
 )
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# Your JWT secret and algorithm
-SECRET_KEY = "your_secret_key"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 @app.get("/")

@@ -17,5 +17,6 @@ export const FormInput = ({ label, type, name, register, error, variants }: Form
     <Label>{label}</Label>
     <Input type={type} {...register(name)} />
     {error && <ErrorMessage>{error}</ErrorMessage>}
+    {/* {error && <p style={{ color: 'red', textAlign: 'center', marginTop: '1rem' }}>{error}</p>} */}
   </InputGroup>
 );

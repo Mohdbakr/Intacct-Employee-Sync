@@ -1,10 +1,14 @@
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { useState } from 'react';
 import { FaGoogle, FaLinkedin } from 'react-icons/fa';
 import { FormInput } from '../Input/FormInput';
 import { FormCheckbox } from '../Checkbox/FormCheckbox';
 import { PrimaryButton, SocialLoginButton } from '../Buttons/FormButton';
 import { LoginFormData } from './types';
 import { Form, ForgotPassword, Divider } from './Form.styles'
+import { login } from '../../services/authService';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 
 const formVariants = {
@@ -25,10 +29,27 @@ const itemVariants = {
 };
 
 export const LoginForm = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormData>();
+  const { login: loginContext } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<LoginFormData>  = async (data: LoginFormData) => {
+    try {
+      setError(null)
+      const response = await login(data.email, data.password);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Authentication failed!');
+      }
+      const responseData  = await response.json();
+      loginContext(responseData .access_token); // Save token to context/localStorage
+      navigate('/home'); // Redirect to the home page
+
+    } catch (error: any) {
+      setError(error.message || 'An error occurred. Please try again later.');
+    }
   };
 
   return (
@@ -63,8 +84,8 @@ export const LoginForm = () => {
         variants={itemVariants}
       />
 
-      <PrimaryButton type="submit" variants={itemVariants}>
-        Login
+      <PrimaryButton type="submit" variants={itemVariants} disabled={isSubmitting}>
+        {isSubmitting ? 'Logging in..' : 'Login'}
       </PrimaryButton>
       
       <ForgotPassword href="#" variants={itemVariants}>

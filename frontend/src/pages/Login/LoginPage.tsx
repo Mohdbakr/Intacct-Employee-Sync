@@ -3,13 +3,13 @@ import { LoginForm } from '../../components/form/LoginForm';
 import { SplitScreen } from '../../components/layout/SpliLayout/SplitScreen';
 import { Container, FormContainer, Title } from './Login.styles';
 
-const LeftContent = () => (
+const LeftContent: React.FC = () => (
   <>
     <NisumLogo />
   </>
 );
 
-const RightContent = () => (
+const RightContent:React.FC = () => (
   <FormContainer
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -20,7 +20,7 @@ const RightContent = () => (
   </FormContainer>
 );
 
-export const LoginPage = () => {
+export const LoginPage: React.FC = () => {
   return (
     <Container>
       <SplitScreen

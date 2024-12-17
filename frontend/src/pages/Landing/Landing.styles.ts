@@ -15,7 +15,7 @@ export const Title = styled.h1`
   color: #333;
 `;
 
-export const WelcomeMessage = styled.p`
+export const Description = styled.p`
   font-size: 1.25rem;
   margin-bottom: 2rem;
   color: #555;
