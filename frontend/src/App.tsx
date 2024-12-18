@@ -4,33 +4,35 @@ import { theme } from './styles/theme';
 import { LoginPage } from './pages/Login/LoginPage';
 import { HomePage } from './pages/Home/HomePage';
 import { LandingPage } from './pages/Landing/LandingPage';
-import { PrivateRoute } from './components/PrivateRoute.tsx';
+import { ProtectedRoute } from './components/ProtectedRoute.tsx';
 import { AuthProvider } from './context/AuthContext';
 
 import './App.css';
 
 function App() {
   return (
-    <AuthProvider>
+    
       <ThemeProvider theme={theme}>
       <Router>
+      <AuthProvider>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           
           {/* Protect Home Page route (only authenticated users can access it) */}
           <Route 
-            path="/Home" 
+            path="/home" 
             element={
-              <PrivateRoute>
+              <ProtectedRoute>
                 <HomePage />
-              </PrivateRoute>
+              </ProtectedRoute>
             } 
           />
-        </Routes>
+          </Routes>
+          </AuthProvider>
       </Router>
     </ThemeProvider>
-    </AuthProvider>
+    
     
   );
 }

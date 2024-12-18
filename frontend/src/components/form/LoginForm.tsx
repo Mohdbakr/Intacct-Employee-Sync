@@ -7,7 +7,6 @@ import { PrimaryButton, SocialLoginButton } from '../Buttons/FormButton';
 import { LoginFormData } from './types';
 import { Form, ForgotPassword, Divider } from './Form.styles'
 import { login } from '../../services/authService';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 
@@ -31,24 +30,15 @@ const itemVariants = {
 export const LoginForm = () => {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormData>();
   const { login: loginContext } = useAuth();
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [loginError, setLoginError] = useState<string | null>(null);
 
-  const onSubmit: SubmitHandler<LoginFormData>  = async (data: LoginFormData) => {
+  const onSubmit: SubmitHandler<LoginFormData> = async (data: LoginFormData) => {
     try {
-      setError(null)
-      const response = await login(data.email, data.password);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Authentication failed!');
-      }
-      const responseData  = await response.json();
-      loginContext(responseData .access_token); // Save token to context/localStorage
-      navigate('/home'); // Redirect to the home page
-
+      setLoginError(null);
+      const token = await login(data.email, data.password);
+      loginContext(token); // This will now handle navigation
     } catch (error: any) {
-      setError(error.message || 'An error occurred. Please try again later.');
+      setLoginError(error.message || 'Authentication failed');
     }
   };
 
@@ -84,9 +74,14 @@ export const LoginForm = () => {
         variants={itemVariants}
       />
 
-      <PrimaryButton type="submit" variants={itemVariants} disabled={isSubmitting}>
-        {isSubmitting ? 'Logging in..' : 'Login'}
+      <PrimaryButton type="submit" variants={itemVariants} disabled={isSubmitting }>
+        {isSubmitting  ? 'Logging in..' : 'Login'}
       </PrimaryButton>
+      {loginError && (
+          <div style={{ color: 'red', marginBottom: '1rem' }}>
+              {loginError}
+          </div>
+      )}
       
       <ForgotPassword href="#" variants={itemVariants}>
         Forgot Password?

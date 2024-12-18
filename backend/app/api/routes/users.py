@@ -1,18 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
-from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import Session
-from jose import JWTError
 
 from app.db.session import get_db
 from app.models.users import UserCreate
 from app.services.user_services import user_service_dependency
-from app.core.security import decode_access_token
+from app.core.security import verify_token
 
 
 router = APIRouter()
-
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login/")
 
 
 async def log_operation(item_id: int):
@@ -20,19 +15,8 @@ async def log_operation(item_id: int):
     print(f"Logging operation for item_id: {item_id}")
 
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
-    try:
-        payload = decode_access_token(token)
-        email: str = payload.get("sub")
-        if email is None:
-            raise HTTPException(status_code=401, detail="Token is invalid or expired")
-        return email
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Token is invalid or expired")
-
-
 @router.get("/profile/")
-async def read_users_me(current_user: str = Depends(get_current_user)):
+async def read_users_me(current_user: str = Depends(verify_token)):
     """Secure endpoint that only logged-in users can access."""
     return {"email": current_user}
 
