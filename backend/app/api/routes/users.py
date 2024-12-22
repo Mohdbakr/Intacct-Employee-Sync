@@ -30,7 +30,9 @@ async def register_user(
 ):
     db_user = await user_service.get_user_by_email(email=user.email, db=db)
     if db_user:
-        raise HTTPException(status_code=400, detail="User email already registered")
+        raise HTTPException(
+            status_code=400, detail="User email already registered"
+        )
     created_user = await user_service.create_user(db=db, user=user)
     background_tasks.add_task(log_operation, item_id=created_user.id)
     return created_user

@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import Session
 from passlib.context import CryptContext
@@ -26,7 +26,10 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 async def authenticate_user(
-    email: str, password: str, user_service: user_service_dependency, db: Session = Depends(get_db)
+    email: str,
+    password: str,
+    user_service: user_service_dependency,
+    db: Session = Depends(get_db),
 ) -> User:
     # user = db.exec(select(User).where(User.email == email)).first()
     user = await user_service.get_user_by_email(email=email, db=db)
@@ -35,29 +38,40 @@ async def authenticate_user(
     return user
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
+def create_access_token(
+    data: dict, expires_delta: timedelta | None = None
+) -> str:
     """Create a new JWT access token."""
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    encoded_jwt = jwt.encode(
+        to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
+    )
     return encoded_jwt
 
 
 def decode_access_token(token: str) -> dict:
     """Decode a JWT token."""
-    return jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+    return jwt.decode(
+        token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+    )
 
 
 def verify_token(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Token is invalid or expired",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
     try:
         payload = decode_access_token(token)
         email: str = payload.get("sub")
         if email is None:
-            raise HTTPException(status_code=401, detail="Token is invalid or expired")
+            raise credentials_exception
         return email
     except JWTError:
-        raise HTTPException(status_code=401, detail="Token is invalid or expired")
+        raise credentials_exception

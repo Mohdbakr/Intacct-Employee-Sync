@@ -1,4 +1,4 @@
-import axiosInstance from '../config/axiosConfig';
+import api from '../config/axiosConfig';
 import axios from 'axios';
 
 const API_URL = 'http://localhost:8000/auth';
@@ -13,7 +13,7 @@ export const login = async (email: string, password: string) => {
         formDetails.append('username', email);
         formDetails.append('password', password);
 
-        const response = await axiosInstance.post<LoginResponse>(`${API_URL}/login`, formDetails, {
+        const response = await api.post<LoginResponse>(`${API_URL}/login`, formDetails, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },

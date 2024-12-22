@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../config/axiosConfig';
+import api from '../config/axiosConfig';
 
 
 interface AuthContextProps {
@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
 
             try {
-                const response = await axiosInstance.get(`http://localhost:8000/auth/verify-token/${token}`);
+                const response = await api.get(`http://localhost:8000/auth/verify-token/${token}`);
                 console.log("Token Verification response:", response)
                 if (response.status == 200) {
                     setIsAuthenticated(true);
