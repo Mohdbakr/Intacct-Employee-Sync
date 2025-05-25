@@ -4,6 +4,24 @@ from app.services.sageintacct import connection
 
 router = APIRouter()
 
+employee_fields = [
+    "Employeeid",
+    "Title",
+    "Locationid",
+    "Departmentid",
+    "Startdate",
+    "Rehire_date",
+    "Enddate",
+    "Status",
+    "Employeetype",
+    "Emptypekey",
+    "Gender",
+    "PERSONALINFO.CONTACTNAME",
+    "Entity",
+    "Paycom_ID",
+    "Customer_ID",
+]
+
 
 @router.get("/get_employee/{employee_id}")
 async def get_employee(employee_id: str):
@@ -13,5 +31,5 @@ async def get_employee(employee_id: str):
 
 @router.get("/get_all_employees")
 async def get_all_employee():
-    employees = connection.departments.get_all()
+    employees = connection.employees.get_all(fields=employee_fields)
     return employees
